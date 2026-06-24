@@ -1,0 +1,326 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sustainability – Dessimate</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+      color: #333;
+      background: #fff;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      z-index: 1000;
+      background: #0000ff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 118px;
+    }
+
+    .nav-logo { display: flex; align-items: center; text-decoration: none; flex-shrink: 0; }
+    .nav-logo img { height: 70px; width: auto; }
+
+    .hamburger {
+      display: none; flex-direction: column; justify-content: center;
+      align-items: center; gap: 5px; background: none; border: none;
+      cursor: pointer; padding: 8px;
+    }
+
+    .hamburger span { display: block; width: 26px; height: 2px; background: #fff; transition: transform 0.25s, opacity 0.25s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .nav-links { display: flex; align-items: center; list-style: none; }
+    .nav-links li { position: relative; }
+
+    .nav-links li a,
+    .nav-links li .nav-item {
+      display: flex; align-items: center; gap: 5px;
+      color: #fff; text-decoration: none;
+      font-size: 18px; font-weight: 400;
+      text-transform: uppercase;
+      padding: 0 14px; height: 118px;
+      cursor: pointer; white-space: nowrap; user-select: none;
+    }
+
+    .nav-links li a.active { font-weight: 600; border-bottom: 3px solid #fff; }
+    .nav-links li a:hover, .nav-links li .nav-item:hover { opacity: 0.85; }
+    .caret { font-size: 11px; line-height: 1; }
+
+    .nav-links li .dropdown {
+      display: none; position: absolute; top: 118px; left: 0;
+      background: #0000dd; min-width: 160px; z-index: 999;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.25); padding: 12px 0;
+    }
+
+    .nav-links li:hover .dropdown { display: block; }
+
+    .nav-links li .dropdown a {
+      display: block; color: #fff; text-decoration: none;
+      font-size: 17px; font-weight: 400; text-transform: none !important;
+      padding: 6px 24px; margin-bottom: 12px; height: auto !important;
+    }
+
+    .nav-links li .dropdown a:hover { background: rgba(255,255,255,0.15); }
+    .nav-links li .dropdown a.active { font-weight: 600; border-bottom: none; background: none; }
+
+    /* ── PAGE ── */
+    .page-wrap { padding-top: 118px; background: rgb(145, 242, 166); }
+
+    .page-title {
+      text-align: center;
+      font-size: 30px; font-weight: 700;
+      letter-spacing: 0.06em;
+      padding: 60px 24px 50px;
+      color: #1a3d26;
+    }
+
+    .content-row { display: flex; align-items: stretch; max-width: 1100px; margin: 0 auto; }
+    .img-col { flex: 0 0 50%; max-width: 50%; display: flex; align-items: center; justify-content: flex-end; padding: 20px 20px 20px 70px; min-height: 296px; }
+    .text-col + .img-col { justify-content: flex-start; padding: 20px 70px 20px 20px; }
+    .img-col img { max-width: 580px; width: 100%; height: auto; display: block; }
+    .text-col { flex: 0 0 50%; max-width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 80px; text-align: center; }
+
+    .text-col h2 { font-size: 24px; font-weight: 400; margin-bottom: 16px; color: #1a3d26; letter-spacing: 0.02em; max-width: 420px; }
+    .text-col h3 { font-size: 18px; font-weight: 600; margin: 16px 0 8px; color: #1a3d26; }
+    .text-col p { font-size: 18px; line-height: 1.65; color: #1e4a2e; margin-bottom: 10px; max-width: 420px; }
+    .text-col ul { margin-left: 20px; margin-top: 4px; text-align: left; }
+    .text-col ul li { font-size: 18px; line-height: 1.7; color: #1e4a2e; margin-bottom: 4px; }
+    .text-col .check-list { list-style: none; margin-left: 0; }
+    .text-col .check-list li::before { content: '✅ '; }
+    .text-col a { color: #1a3d26; }
+
+    .quote-btn {
+      display: inline-block; margin-top: 24px;
+      background: #1a6840; color: #fff;
+      font-size: 14px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 14px 36px; text-decoration: none;
+      align-self: flex-start;
+    }
+
+    .quote-btn:hover { background: #145534; }
+
+    /* ── FOOTER ── */
+    .subscribe { background: #7b9fb8; padding: 52px 24px 36px; text-align: center; }
+    .subscribe h2 { font-size: 42px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: #fff; margin-bottom: 14px; }
+    .subscribe > p { font-size: 18px; color: #e8f0f6; margin-bottom: 24px; }
+
+    .subscribe-form { display: flex; justify-content: center; max-width: 480px; margin: 0 auto 36px; }
+    .subscribe-form input { flex: 1; padding: 11px 14px; border: 1px solid #a0bcd0; border-right: none; font-size: 16px; font-family: inherit; outline: none; color: #333; background: #fff; }
+    .subscribe-form input::placeholder { color: #aaa; }
+    .btn-signup { background: #5b8ca8; color: #fff; border: 1px solid #5b8ca8; font-size: 16px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 11px 24px; cursor: pointer; font-family: inherit; }
+    .btn-signup:hover { background: #4a7a96; }
+
+    .footer-bottom { display: flex; justify-content: center; max-width: 1200px; margin: 0 auto; padding-top: 20px; }
+    .footer-bottom .copy { font-size: 14px; color: #d0e4f0; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      nav { height: 70px; padding: 0 16px; }
+      .nav-logo img { height: 48px; }
+      .hamburger { display: flex; }
+
+      .nav-links {
+        display: none; flex-direction: column; align-items: stretch; width: 100%;
+        background: #0000ff; position: fixed; top: 70px; left: 0; right: 0;
+        max-height: calc(100vh - 70px); overflow-y: auto; z-index: 999;
+      }
+
+      .nav-links.open { display: flex; }
+
+      .nav-links li a, .nav-links li .nav-item {
+        height: auto; padding: 16px 20px; font-size: 16px;
+        border-bottom: 1px solid rgba(255,255,255,0.15); justify-content: space-between;
+      }
+
+      .nav-links li .dropdown { display: none; position: static; box-shadow: none; background: #0000cc; min-width: 100%; }
+      .nav-links li.open-mobile .dropdown { display: block; }
+      .nav-links li .dropdown a { font-size: 16px; padding: 15px 36px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+
+      .page-wrap { padding-top: 70px; }
+      .page-title { font-size: 20px; padding: 36px 16px 28px; }
+      .content-row { flex-direction: column; }
+      .img-col, .text-col { flex: none; max-width: 100%; width: 100%; }
+      .img-col { min-height: 240px; }
+      .text-col { padding: 32px 24px; }
+      .text-col h2 { font-size: 20px; }
+
+      .subscribe h2 { font-size: 28px; letter-spacing: 2px; }
+      .subscribe-form { flex-direction: column; }
+      .subscribe-form input { border-right: 1px solid #a0bcd0; border-bottom: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav id="main-nav">
+    <a href="index.html" class="nav-logo">
+      <img src="images/logo.webp" alt="Dessimate Logo" />
+    </a>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li class="has-dropdown">
+        <span class="nav-item">Mechanical <span class="caret">&#9660;</span></span>
+        <div class="dropdown">
+          <a href="castings.html">Castings</a>
+          <a href="machined-parts.html">Machined Parts</a>
+        </div>
+      </li>
+      <li class="has-dropdown">
+        <span class="nav-item">Electronics <span class="caret">&#9660;</span></span>
+        <div class="dropdown">
+          <a href="our-products.html">Our Products</a>
+          <a href="our-services.html">Our Services</a>
+        </div>
+      </li>
+      <li class="has-dropdown">
+        <span class="nav-item">Other Services <span class="caret">&#9660;</span></span>
+        <div class="dropdown">
+          <a href="sustainability.html" class="active">Sustainability</a>
+          <a href="warehousing.html">Warehousing</a>
+          <a href="allied-services.html">Allied Services</a>
+        </div>
+      </li>
+      <li><a href="contact-us.html">Contact Us</a></li>
+      <li><a href="terms-and-conditions.html">Terms and Conditions</a></li>
+      <li class="has-dropdown">
+        <span class="nav-item">More <span class="caret">&#9660;</span></span>
+        <div class="dropdown">
+          <a href="supplier-manual.html">Supplier Manual</a>
+        </div>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="page-wrap">
+    <h1 class="page-title">🌿 Sustainability as a Service</h1>
+
+    <!-- Row 1: img | Partnering for a Greener Supply Chain -->
+    <div class="content-row">
+      <div class="img-col">
+        <img src="images/sustain_1.webp" alt="Sustainability concept" />
+      </div>
+      <div class="text-col">
+        <h2>Partnering for a Greener Supply Chain</h2>
+        <p>At Dessimate, sustainability is not just part of how we operate — it's a service we deliver. We help larger companies strengthen their environmental and social responsibility programs by offering sustainable manufacturing, sourcing, and reporting solutions at every stage of the supply chain.</p>
+        <p>By integrating responsible practices into your mechanical parts sourcing, you can meet your ESG targets, enhance your brand reputation, and contribute meaningfully to a cleaner, greener future.</p>
+      </div>
+    </div>
+
+    <!-- Row 2: text | What We Offer (all 4 services) -->
+    <div class="content-row">
+      <div class="text-col">
+        <h2>What We Offer</h2>
+        <h3>♻️ Sustainable Manufacturing Solutions</h3>
+        <p>ISO-certified foundries using energy-efficient processes, closed-loop scrap recycling, and lean manufacturing to minimize waste at every step.</p>
+        <h3>🔎 Sustainable Sourcing and Traceability</h3>
+        <p>Full material traceability from raw material to finished part, with vetted suppliers and optimized logistics to reduce your supply chain's carbon footprint.</p>
+        <h3>📊 Reporting and Compliance Support</h3>
+        <p>Carbon footprint data, supplier certifications, and alignment with GRI, CDP, and SEC climate disclosure frameworks to meet your reporting obligations.</p>
+        <h3>🔧 Eco-Design and Engineering</h3>
+        <p>Lightweighting, alloy selection for recyclability, and DFM consulting to design greener components that support your product innovation roadmaps.</p>
+      </div>
+      <div class="img-col">
+        <img src="images/sustain_2.webp" alt="Sustainable green building" />
+      </div>
+    </div>
+
+    <!-- Row 3: img | Why Choose Dessimate -->
+    <div class="content-row">
+      <div class="img-col">
+        <img src="images/sustain_3.webp" alt="Green road through forest" />
+      </div>
+      <div class="text-col">
+        <h2>Why Choose Dessimate?</h2>
+        <ul class="check-list">
+          <li>Expand Your ESG Program: Align sourcing with global sustainability benchmarks</li>
+          <li>Strengthen Your Supply Chain: Responsible, ethical, and transparent sourcing at the core</li>
+          <li>Support Sustainable Innovation: Lighter, smarter, and greener component solutions</li>
+          <li>Enhance Brand Value: Deliver the sustainable practices today's customers demand</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Row 4: text | Industries We Support -->
+    <div class="content-row">
+      <div class="text-col">
+        <h2>Industries We Support</h2>
+        <ul>
+          <li>Automotive and EV Platforms</li>
+          <li>Industrial Equipment and Heavy Machinery</li>
+          <li>Aerospace and Defense</li>
+          <li>Agriculture and Renewable Energy</li>
+          <li>Infrastructure and Construction Equipment</li>
+        </ul>
+      </div>
+      <div class="img-col">
+        <img src="images/sustain_4.webp" alt="ESG and sustainability partnership" />
+      </div>
+    </div>
+
+    <!-- Row 5: img | A Shared Responsibility -->
+    <div class="content-row">
+      <div class="img-col">
+        <img src="images/sustain_5.webp" alt="Hands holding green plant" />
+      </div>
+      <div class="text-col">
+        <h2>A Shared Responsibility</h2>
+        <p>Sustainability is a global effort. By partnering with Dessimate, you extend your commitment beyond your walls — all the way through your supply chain.</p>
+        <p>We are committed to reducing our environmental impact while delivering high-quality Aluminum and Steel castings to industries across the United States. By choosing sustainable manufacturing practices and partnering with responsible foundries, we create value not just for our customers, but for the planet we all share.</p>
+      </div>
+    </div>
+
+    <!-- Row 6: text | Let's Build a Sustainable Future -->
+    <div class="content-row">
+      <div class="text-col">
+        <h2>Let's Build a Sustainable Future Together</h2>
+        <p>Together, we can achieve tangible impact: reduced emissions, less waste, and smarter resource management. If you have questions about our sustainability practices or want to explore how we can support your ESG program, we'd love to hear from you.</p>
+        <p>📩 <a href="mailto:sales@dessimate.com">sales@dessimate.com</a></p>
+        <p>📞 <a href="tel:+19492289802">+1-949-228-9802</a></p>
+      </div>
+      <div class="img-col">
+        <img src="images/sustain_6.webp" alt="Green forest canopy" />
+      </div>
+    </div>
+  </div>
+
+  <footer class="subscribe">
+    <div class="footer-bottom">
+      <span class="copy">Copyright &copy; 2025 Dessimate &middot; All Rights Reserved.</span>
+    </div>
+  </footer>
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const navLinks  = document.getElementById('nav-links');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      navLinks.classList.toggle('open');
+    });
+    document.querySelectorAll('.has-dropdown .nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const li = item.closest('li');
+        const wasMobileOpen = li.classList.contains('open-mobile');
+        document.querySelectorAll('.has-dropdown').forEach(l => l.classList.remove('open-mobile'));
+        if (!wasMobileOpen) li.classList.add('open-mobile');
+      });
+    });
+  </script>
+
+</body>
+</html>

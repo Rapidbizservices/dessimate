@@ -1,0 +1,271 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Products – Dessimate</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; color: #333; background: #fff; }
+    nav { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: #0000ff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 118px; }
+    .nav-logo { display: flex; align-items: center; text-decoration: none; flex-shrink: 0; }
+    .nav-logo img { height: 70px; width: auto; }
+    .hamburger { display: none; flex-direction: column; justify-content: center; align-items: center; gap: 5px; background: none; border: none; cursor: pointer; padding: 8px; }
+    .hamburger span { display: block; width: 26px; height: 2px; background: #fff; transition: transform 0.25s, opacity 0.25s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .nav-links { display: flex; align-items: center; list-style: none; }
+    .nav-links li { position: relative; }
+    .nav-links li a, .nav-links li .nav-item { display: flex; align-items: center; gap: 5px; color: #fff; text-decoration: none; font-size: 18px; font-weight: 400; text-transform: uppercase; padding: 0 14px; height: 118px; cursor: pointer; white-space: nowrap; user-select: none; }
+    .nav-links li a.active { font-weight: 600; border-bottom: 3px solid #fff; }
+    .nav-links li a:hover, .nav-links li .nav-item:hover { opacity: 0.85; }
+    .caret { font-size: 11px; line-height: 1; }
+    .nav-links li .dropdown { display: none; position: absolute; top: 118px; left: 0; background: #0000dd; min-width: 160px; z-index: 999; box-shadow: 0 4px 8px rgba(0,0,0,0.25); padding: 12px 0; }
+    .nav-links li:hover .dropdown { display: block; }
+    .nav-links li .dropdown a { display: block; color: #fff; text-decoration: none; font-size: 17px; font-weight: 400; text-transform: none !important; padding: 6px 24px; margin-bottom: 12px; height: auto !important; }
+    .nav-links li .dropdown a:hover { background: rgba(255,255,255,0.15); }
+    .nav-links li .dropdown a.active { font-weight: 600; border-bottom: none; background: none; }
+
+    .page-wrap { padding-top: 118px; background: rgb(230, 230, 250); min-height: 100vh; }
+    .page-title { text-align: center; color: #222; font-size: 30px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 60px 24px 50px; }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px 32px;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 40px 60px;
+    }
+
+    .cards-grid.row-separator {
+      border-top: 1px solid #b0b0d0;
+      padding-top: 48px;
+      margin-top: 8px;
+    }
+
+    .card {
+      background: rgb(230, 230, 250);
+      border: none;
+      overflow: hidden;
+    }
+
+    .card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-body {
+      padding: 20px 4px;
+    }
+
+    .card-body h3 {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #222;
+    }
+
+    .card-body ul {
+      margin-left: 18px;
+    }
+
+    .card-body ul li {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #555;
+      margin-bottom: 3px;
+    }
+
+    .footnote {
+      text-align: center;
+      color: rgba(255,255,255,0.6);
+      font-size: 14px;
+      padding: 0 24px 48px;
+    }
+
+    .subscribe { background: #7b9fb8; padding: 52px 24px 36px; text-align: center; }
+    .subscribe h2 { font-size: 42px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: #fff; margin-bottom: 14px; }
+    .subscribe > p { font-size: 18px; color: #e8f0f6; margin-bottom: 24px; }
+    .subscribe-form { display: flex; justify-content: center; max-width: 480px; margin: 0 auto 36px; }
+    .subscribe-form input { flex: 1; padding: 11px 14px; border: 1px solid #a0bcd0; border-right: none; font-size: 16px; font-family: inherit; outline: none; color: #333; background: #fff; }
+    .subscribe-form input::placeholder { color: #aaa; }
+    .btn-signup { background: #5b8ca8; color: #fff; border: 1px solid #5b8ca8; font-size: 16px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 11px 24px; cursor: pointer; font-family: inherit; }
+    .btn-signup:hover { background: #4a7a96; }
+    .footer-bottom { display: flex; justify-content: center; max-width: 1200px; margin: 0 auto; padding-top: 20px; }
+    .footer-bottom .copy { font-size: 14px; color: #d0e4f0; }
+
+    @media (max-width: 768px) {
+      nav { height: 70px; padding: 0 16px; }
+      .nav-logo img { height: 48px; }
+      .hamburger { display: flex; }
+      .nav-links { display: none; flex-direction: column; align-items: stretch; width: 100%; background: #0000ff; position: fixed; top: 70px; left: 0; right: 0; max-height: calc(100vh - 70px); overflow-y: auto; z-index: 999; }
+      .nav-links.open { display: flex; }
+      .nav-links li a, .nav-links li .nav-item { height: auto; padding: 16px 20px; font-size: 16px; border-bottom: 1px solid rgba(255,255,255,0.15); justify-content: space-between; }
+      .nav-links li .dropdown { display: none; position: static; box-shadow: none; background: #0000cc; min-width: 100%; }
+      .nav-links li.open-mobile .dropdown { display: block; }
+      .nav-links li .dropdown a { font-size: 16px; padding: 15px 36px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+      .page-wrap { padding-top: 70px; }
+      .page-title { font-size: 20px; padding: 36px 16px 28px; }
+      .cards-grid { grid-template-columns: 1fr; padding: 0 16px; }
+      .subscribe h2 { font-size: 28px; letter-spacing: 2px; }
+      .subscribe-form { flex-direction: column; }
+      .subscribe-form input { border-right: 1px solid #a0bcd0; border-bottom: none; }
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .cards-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <nav id="main-nav">
+    <a href="index.html" class="nav-logo"><img src="images/logo.webp" alt="Dessimate Logo" /></a>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li class="has-dropdown">
+        <span class="nav-item">Mechanical <span class="caret">&#9660;</span></span>
+        <div class="dropdown">
+          <a href="castings.html">Castings</a>
+          <a href="machined-parts.html">Machined Parts</a>
+        </div>
+      </li>
+      <li class="has-dropdown">
+        <span class="nav-item">Electronics <span class="caret">&#9660;</span></span>
+        <div class="dropdown">
+          <a href="our-products.html" class="active">Our Products</a>
+          <a href="our-services.html">Our Services</a>
+        </div>
+      </li>
+      <li class="has-dropdown">
+        <span class="nav-item">Other Services <span class="caret">&#9660;</span></span>
+        <div class="dropdown">
+          <a href="sustainability.html">Sustainability</a>
+          <a href="warehousing.html">Warehousing</a>
+          <a href="allied-services.html">Allied Services</a>
+        </div>
+      </li>
+      <li><a href="contact-us.html">Contact Us</a></li>
+      <li><a href="terms-and-conditions.html">Terms and Conditions</a></li>
+      <li class="has-dropdown">
+        <span class="nav-item">More <span class="caret">&#9660;</span></span>
+        <div class="dropdown"><a href="supplier-manual.html">Supplier Manual</a></div>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="page-wrap">
+    <h1 class="page-title">Our Products</h1>
+
+    <div class="cards-grid">
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=540&h=405&fit=crop&auto=format" alt="Automotive Seat Controller" />
+        <div class="card-body">
+          <h3>Automotive Seat Heat and Cool Control Module</h3>
+          <ul>
+            <li>Precision temperature control with sensor feedback</li>
+            <li>PWM-based output for efficient heater and fan control</li>
+            <li>Compact design for easy under-seat installation</li>
+            <li>CAN/UART communication ready</li>
+            <li>Configurable for multiple seat variants and platforms</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="https://img1.wsimg.com/isteam/getty/827822342/:/cr=t:24.94%25,l:0%25,w:100%25,h:50.13%25/rs=w:540,h:405,cg:true" alt="Industrial Motor Controller" />
+        <div class="card-body">
+          <h3>Industrial Motor Controller</h3>
+          <ul>
+            <li>Drive and monitor small DC or BLDC motors</li>
+            <li>Use ADCs for current sensing, and timers for PWM</li>
+            <li>Ideal for conveyor systems, pumps, or robotic arms</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="https://img1.wsimg.com/isteam/getty/1745032658/:/cr=t:0%25,l:5.67%25,w:88.67%25,h:100%25/rs=w:540,h:405,cg:true" alt="Home Appliance Controller" />
+        <div class="card-body">
+          <h3>Home Appliance Controller</h3>
+          <ul>
+            <li>Embedded controller for washing machines, microwave ovens, or vacuum cleaners</li>
+            <li>Interfaces with user inputs (buttons, knobs), sensors, and relays</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="cards-grid row-separator">
+      <div class="card">
+        <img src="https://img1.wsimg.com/isteam/getty/940594896/:/cr=t:0%25,l:0.07%25,w:99.85%25,h:100%25/rs=w:540,h:405,cg:true" alt="Power Supply Monitor" />
+        <div class="card-body">
+          <h3>Power Supply Monitor &amp; Controller</h3>
+          <ul>
+            <li>Real-time voltage/current monitoring using ADC</li>
+            <li>Digital control of switching regulators or relays</li>
+            <li>Suitable for UPS systems, industrial PSUs, or battery management</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="https://img1.wsimg.com/isteam/getty/950266398/:/cr=t:23.99%25,l:0%25,w:100%25,h:52.03%25/rs=w:540,h:405,cg:true" alt="Automated Irrigator Controller" />
+        <div class="card-body">
+          <h3>Automated Irrigator Controller</h3>
+          <ul>
+            <li>Reads soil moisture, temperature, and light sensors</li>
+            <li>Controls valves, pumps based on a programmable schedule</li>
+            <li>Communicates via serial or wireless module (with external chip)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="https://img1.wsimg.com/isteam/getty/1463754155/:/cr=t:0%25,l:5.66%25,w:88.68%25,h:100%25/rs=w:540,h:405,cg:true" alt="Smart Battery Charger" />
+        <div class="card-body">
+          <h3>Smart Battery Charger</h3>
+          <ul>
+            <li>Charge and monitor NiMH or Li-Ion battery packs</li>
+            <li>Use ADCs to monitor voltage/current/temperature</li>
+            <li>PWM control for current-limited charging</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="subscribe">
+    <div class="footer-bottom">
+      <span class="copy">Copyright &copy; 2025 Dessimate &middot; All Rights Reserved.</span>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('img[src*="wsimg.com"]').forEach(img => {
+      img.onerror = function() {
+        this.src = 'https://placehold.co/540x405/e8e8e8/aaaaaa?text=Image';
+        this.onerror = null;
+      };
+    });
+
+    const hamburger = document.getElementById('hamburger');
+    const navLinks  = document.getElementById('nav-links');
+    hamburger.addEventListener('click', () => { hamburger.classList.toggle('open'); navLinks.classList.toggle('open'); });
+    document.querySelectorAll('.has-dropdown .nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const li = item.closest('li');
+        const wasMobileOpen = li.classList.contains('open-mobile');
+        document.querySelectorAll('.has-dropdown').forEach(l => l.classList.remove('open-mobile'));
+        if (!wasMobileOpen) li.classList.add('open-mobile');
+      });
+    });
+  </script>
+</body>
+</html>

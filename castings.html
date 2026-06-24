@@ -1,0 +1,370 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Castings – Dessimate</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+      color: #333;
+      background: #fff;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      z-index: 1000;
+      background: #0000ff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 118px;
+    }
+
+    .nav-logo { display: flex; align-items: center; text-decoration: none; flex-shrink: 0; }
+    .nav-logo img { height: 70px; width: auto; }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .hamburger span { display: block; width: 26px; height: 2px; background: #fff; transition: transform 0.25s, opacity 0.25s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .nav-links { display: flex; align-items: center; list-style: none; }
+    .nav-links li { position: relative; }
+
+    .nav-links li a,
+    .nav-links li .nav-item {
+      display: flex; align-items: center; gap: 5px;
+      color: #fff; text-decoration: none;
+      font-size: 18px; font-weight: 400;
+      text-transform: uppercase;
+      padding: 0 14px; height: 118px;
+      cursor: pointer; white-space: nowrap; user-select: none;
+    }
+
+    .nav-links li a.active { font-weight: 600; border-bottom: 3px solid #fff; }
+    .nav-links li a:hover, .nav-links li .nav-item:hover { opacity: 0.85; }
+    .caret { font-size: 11px; line-height: 1; }
+
+    .nav-links li .dropdown {
+      display: none; position: absolute; top: 118px; left: 0;
+      background: #0000dd; min-width: 160px; z-index: 999;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.25); padding: 12px 0;
+    }
+
+    .nav-links li:hover .dropdown { display: block; }
+
+    .nav-links li .dropdown a {
+      display: block; color: #fff; text-decoration: none;
+      font-size: 17px; font-weight: 400; text-transform: none !important;
+      padding: 6px 24px; margin-bottom: 12px; height: auto !important;
+    }
+
+    .nav-links li .dropdown a:hover { background: rgba(255,255,255,0.15); }
+    .nav-links li .dropdown a.active { font-weight: 600; border-bottom: none; background: none; }
+
+    /* ── PAGE ── */
+    .page-wrap { padding-top: 118px; background: #2e5c52; color: #fff; }
+
+    .page-title {
+      text-align: center; color: #222;
+      font-size: 30px; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 60px 24px 50px; color: #fff;
+    }
+
+    .content-row { display: flex; align-items: stretch; max-width: 1100px; margin: 0 auto; }
+    .img-col { flex: 0 0 50%; max-width: 50%; display: flex; align-items: center; justify-content: flex-end; padding: 20px 20px 20px 70px; min-height: 296px; }
+    .text-col + .img-col { justify-content: flex-start; padding: 20px 70px 20px 20px; }
+    .img-col img { max-width: 580px; width: 100%; height: auto; display: block; }
+
+    .text-col {
+      flex: 0 0 50%; max-width: 50%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 40px 80px; text-align: center; color: #fff;
+    }
+
+    .text-col h2 { font-size: 24px; font-weight: 400; margin-bottom: 16px; color: #fff; letter-spacing: 0.02em; max-width: 420px; }
+    .text-col h3 { font-size: 18px; font-weight: 600; margin: 16px 0 8px; color: #fff; }
+    .text-col p { font-size: 18px; line-height: 1.65; color: #d4e8e4; margin-bottom: 10px; max-width: 420px; }
+    .text-col ul { margin-left: 20px; margin-top: 4px; text-align: left; }
+    .text-col ul li { font-size: 18px; line-height: 1.7; color: #d4e8e4; margin-bottom: 4px; }
+    .text-col .check-list { list-style: none; margin-left: 0; }
+    .text-col .check-list li::before { content: '✅ '; }
+    .text-col a { color: #fff; }
+    .text-col a.quote-btn { color: #fff; }
+
+    .quote-btn {
+      display: inline-block; margin-top: 24px;
+      background: #5b8ca8; color: #fff;
+      font-size: 14px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 14px 36px; text-decoration: none;
+      align-self: flex-start;
+    }
+
+    .quote-btn:hover { background: #4a7a96; }
+
+    /* ── FOOTER ── */
+    .subscribe { background: #7b9fb8; padding: 52px 24px 36px; text-align: center; }
+    .subscribe h2 { font-size: 42px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: #fff; margin-bottom: 14px; }
+    .subscribe > p { font-size: 18px; color: #e8f0f6; margin-bottom: 24px; }
+
+    .subscribe-form { display: flex; justify-content: center; max-width: 480px; margin: 0 auto 36px; }
+    .subscribe-form input { flex: 1; padding: 11px 14px; border: 1px solid #a0bcd0; border-right: none; font-size: 16px; font-family: inherit; outline: none; color: #333; background: #fff; }
+    .subscribe-form input::placeholder { color: #aaa; }
+    .btn-signup { background: #5b8ca8; color: #fff; border: 1px solid #5b8ca8; font-size: 16px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 11px 24px; cursor: pointer; font-family: inherit; }
+    .btn-signup:hover { background: #4a7a96; }
+
+    .footer-bottom { display: flex; justify-content: center; max-width: 1200px; margin: 0 auto; padding-top: 20px; }
+    .footer-bottom .copy { font-size: 14px; color: #d0e4f0; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      nav { height: 70px; padding: 0 16px; }
+      .nav-logo img { height: 48px; }
+      .hamburger { display: flex; }
+
+      .nav-links {
+        display: none; flex-direction: column; align-items: stretch; width: 100%;
+        background: #0000ff; position: fixed; top: 70px; left: 0; right: 0;
+        max-height: calc(100vh - 70px); overflow-y: auto; z-index: 999;
+      }
+
+      .nav-links.open { display: flex; }
+
+      .nav-links li a, .nav-links li .nav-item {
+        height: auto; padding: 16px 20px; font-size: 16px;
+        border-bottom: 1px solid rgba(255,255,255,0.15); justify-content: space-between;
+      }
+
+      .nav-links li .dropdown { display: none; position: static; box-shadow: none; background: #0000cc; min-width: 100%; }
+      .nav-links li.open-mobile .dropdown { display: block; }
+      .nav-links li .dropdown a { font-size: 16px; padding: 15px 36px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+
+      .page-wrap { padding-top: 70px; }
+      .page-title { font-size: 20px; padding: 36px 16px 28px; }
+      .content-row { flex-direction: column; }
+      .img-col, .text-col { flex: none; max-width: 100%; width: 100%; }
+      .img-col { min-height: 240px; }
+      .text-col { padding: 32px 24px; }
+      .text-col h2 { font-size: 20px; }
+
+      .subscribe h2 { font-size: 28px; letter-spacing: 2px; }
+      .subscribe-form { flex-direction: column; }
+      .subscribe-form input { border-right: 1px solid #a0bcd0; border-bottom: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav id="main-nav">
+    <a href="index.html" class="nav-logo">
+      <img src="images/logo.webp" alt="Dessimate Logo" />
+    </a>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li class="has-dropdown">
+        <span class="nav-item">Mechanical <span class="caret">&#9660;</span></span>
+        <div class="dropdown">
+          <a href="castings.html" class="active">Castings</a>
+          <a href="machined-parts.html">Machined Parts</a>
+        </div>
+      </li>
+      <li class="has-dropdown">
+        <span class="nav-item">Electronics <span class="caret">&#9660;</span></span>
+        <div class="dropdown">
+          <a href="our-products.html">Our Products</a>
+          <a href="our-services.html">Our Services</a>
+        </div>
+      </li>
+      <li class="has-dropdown">
+        <span class="nav-item">Other Services <span class="caret">&#9660;</span></span>
+        <div class="dropdown">
+          <a href="sustainability.html">Sustainability</a>
+          <a href="warehousing.html">Warehousing</a>
+          <a href="allied-services.html">Allied Services</a>
+        </div>
+      </li>
+      <li><a href="contact-us.html">Contact Us</a></li>
+      <li><a href="terms-and-conditions.html">Terms and Conditions</a></li>
+      <li class="has-dropdown">
+        <span class="nav-item">More <span class="caret">&#9660;</span></span>
+        <div class="dropdown">
+          <a href="supplier-manual.html">Supplier Manual</a>
+        </div>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="page-wrap">
+    <h1 class="page-title">High-Quality Aluminum and Steel Castings</h1>
+
+    <div class="content-row">
+      <div class="img-col">
+        <img src="https://img1.wsimg.com/isteam/getty/2115411236/:/cr=t:5.49%25,l:0%25,w:100%25,h:89.01%25/rs=w:760,cg:true" alt="Molten metal casting" />
+      </div>
+      <div class="text-col">
+        <h2>About Us</h2>
+        <p>At Dessimate, we specialize in supplying precision mechanical parts castings using Aluminum and Steel to customers across the United States.</p>
+        <p>With a strong network of ISO-certified foundries and decades of expertise, we deliver high-performance die cast and investment cast parts that meet your quality, cost, and delivery expectations.</p>
+        <p>Whether you need small, intricate components or large structural castings, we provide tailored solutions for automotive, industrial machinery, aerospace, agriculture, energy, and more.</p>
+      </div>
+    </div>
+
+    <div class="content-row">
+      <div class="text-col">
+        <h2>Our Capabilities</h2>
+        <h3>🛠 Die Casting (Aluminum and Steel)</h3>
+        <ul>
+          <li>High-pressure and low-pressure die casting</li>
+          <li>Complex geometry parts with tight tolerances</li>
+          <li>Thin-wall components</li>
+          <li>Post-machining, surface finishing, and assembly services</li>
+          <li>Materials: A356, ADC12, LM6, Mild Steel, Stainless Steel grades</li>
+        </ul>
+        <h3>🔥 Investment Casting (Steel and Aluminum Alloys)</h3>
+        <ul>
+          <li>Lost wax precision casting process</li>
+          <li>Intricate designs and near-net-shape production</li>
+          <li>Aerospace-grade alloys and high-strength steels</li>
+          <li>Heat treatment, shot blasting, and CNC machining are available</li>
+        </ul>
+      </div>
+      <div class="img-col">
+        <img src="https://img1.wsimg.com/isteam/getty/1498525918/:/cr=t:16.67%25,l:0%25,w:100%25,h:66.67%25/rs=w:760,cg:true" alt="Cast parts" />
+      </div>
+    </div>
+
+    <div class="content-row">
+      <div class="img-col">
+        <img src="https://img1.wsimg.com/isteam/stock/8581/:/cr=t:12.43%25,l:0%25,w:100%25,h:75.14%25/rs=w:760,cg:true" alt="Precision machining" />
+      </div>
+      <div class="text-col">
+        <h2>Key Advantages</h2>
+        <ul class="check-list">
+          <li>ISO 9001:2015 certified foundries</li>
+          <li>Strict metallurgical and dimensional quality control</li>
+          <li>Competitive pricing from Indian manufacturing base</li>
+          <li>Rapid prototyping and tooling support</li>
+          <li>Seamless shipping and customs handling to the USA</li>
+          <li>Local support available in the U.S. for communication and logistics</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="content-row">
+      <div class="text-col">
+        <h2>Industries Served</h2>
+        <ul>
+          <li>Automotive Components</li>
+          <li>Heavy Machinery and Equipment</li>
+          <li>Construction Hardware</li>
+          <li>Electrical Enclosures</li>
+          <li>Agricultural Implements</li>
+          <li>Energy and Oilfield Equipment</li>
+          <li>Defense and Aerospace Parts</li>
+        </ul>
+      </div>
+      <div class="img-col">
+        <img src="https://img1.wsimg.com/isteam/getty/2044352055/:/cr=t:12.26%25,l:0%25,w:100%25,h:75.47%25/rs=w:760,cg:true" alt="Industrial sector" />
+      </div>
+    </div>
+
+    <div class="content-row">
+      <div class="img-col">
+        <img src="https://img1.wsimg.com/isteam/getty/2155732220/:/cr=t:16.67%25,l:0%25,w:100%25,h:66.67%25/rs=w:760,cg:true" alt="Quality manufacturing" />
+      </div>
+      <div class="text-col">
+        <h2>Why Source From Us?</h2>
+        <p><strong>Superior Quality:</strong> Castings meet ASTM, SAE, and customer-specific standards.</p>
+        <p><strong>Reduced Lead Times:</strong> We combine Indian manufacturing efficiency with U.S.-based coordination.</p>
+        <p><strong>Engineering Support:</strong> Full DFM (Design for Manufacturability) assistance.</p>
+        <p><strong>Transparent Communication:</strong> Real-time updates and flexible order management.</p>
+      </div>
+    </div>
+
+    <div class="content-row">
+      <div class="text-col">
+        <h2>Typical Products We Supply</h2>
+        <ul>
+          <li>Engine brackets and housings</li>
+          <li>Pump bodies and impellers</li>
+          <li>Gearbox and transmission casings</li>
+          <li>Agricultural equipment parts</li>
+          <li>Structural supports and arms</li>
+          <li>Heat exchangers and manifolds</li>
+        </ul>
+      </div>
+      <div class="img-col">
+        <img src="https://img1.wsimg.com/isteam/getty/1680691058/:/cr=t:5.56%25,l:0%25,w:100%25,h:88.89%25/rs=w:760,cg:true" alt="Manufactured products" />
+      </div>
+    </div>
+
+    <div class="content-row">
+      <div class="img-col">
+        <img src="https://img1.wsimg.com/isteam/getty/2093852487/:/cr=t:11.53%25,l:0%25,w:100%25,h:76.93%25/rs=w:760,cg:true" alt="Supply chain logistics" />
+      </div>
+      <div class="text-col">
+        <h2>Get a Quote</h2>
+        <p>Looking for custom aluminum or steel cast parts from India? We offer quick turnaround quotes, competitive pricing, and end-to-end supply chain support.</p>
+        <p>📩 <a href="mailto:sales@dessimate.com">sales@dessimate.com</a></p>
+        <p>📞 <a href="tel:+19492289802">+1-949-228-9802</a></p>
+        <p>Let's build better, stronger parts — together.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="subscribe">
+    <div class="footer-bottom">
+      <span class="copy">Copyright &copy; 2025 Dessimate &middot; All Rights Reserved.</span>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('img[src*="wsimg.com"]').forEach(img => {
+      img.onerror = function() {
+        this.src = 'https://placehold.co/760x400/e8e8e8/aaaaaa?text=Image';
+        this.onerror = null;
+      };
+    });
+
+    const hamburger = document.getElementById('hamburger');
+    const navLinks  = document.getElementById('nav-links');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      navLinks.classList.toggle('open');
+    });
+    document.querySelectorAll('.has-dropdown .nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const li = item.closest('li');
+        const wasMobileOpen = li.classList.contains('open-mobile');
+        document.querySelectorAll('.has-dropdown').forEach(l => l.classList.remove('open-mobile'));
+        if (!wasMobileOpen) li.classList.add('open-mobile');
+      });
+    });
+  </script>
+
+</body>
+</html>
